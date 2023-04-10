@@ -5,6 +5,9 @@ export const getBusInformation = async (urls: any) => {
         const res = await fetch(urls[0]);
         const html = await res.text();
         const doc = new DOMParser().parseFromString(html, "text/html")!;
+
+        const dow = doc.querySelector("font[color='red']")?.textContent;
+        console.log(dow);
     } catch (error) {
         console.log(error);
     }
