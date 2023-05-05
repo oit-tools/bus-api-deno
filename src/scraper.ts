@@ -40,6 +40,8 @@ const fetchBusInformation = async (url: string) => {
 
 export const getBusInformation = async (urls: string[]) => {
   const busInformation: BusInformation = {} as BusInformation;
+  const busTimetables: BusTimetable[] = [];
+
   for (const url of urls) {
     let doc: HTMLDocument | undefined = await fetchBusInformation(url);
 
@@ -71,7 +73,6 @@ export const getBusInformation = async (urls: string[]) => {
       s: string,
     ) => s.trim());
 
-    const busTimetables = [];
     for (let i = 0; i < timetable.length - 1; i += 4) {
       let [time, type, destination] = timetable[i].split(/[\[\]]/).filter((
         s: string,
@@ -95,17 +96,17 @@ export const getBusInformation = async (urls: string[]) => {
         delay = "0";
       }
 
-      const BusTimetable: BusTimetable = {} as BusTimetable;
-      BusTimetable.terminal = terminal;
-      BusTimetable.station = station;
-      BusTimetable.departure_time = time;
-      BusTimetable.delay_minutes = delay;
-      BusTimetable.type = type;
-      BusTimetable.destination = destination;
+      const busTimetable: BusTimetable = {} as BusTimetable;
+      busTimetable.terminal = terminal;
+      busTimetable.station = station;
+      busTimetable.departure_time = time;
+      busTimetable.delay_minutes = delay;
+      busTimetable.type = type;
+      busTimetable.destination = destination;
 
-      busTimetables.push(BusTimetable);
+      busTimetables.push(busTimetable);
     }
-    busInformation.bus_service_status = busTimetables;
   }
+  busInformation.bus_service_status = busTimetables;
   return busInformation;
 };
