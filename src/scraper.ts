@@ -4,9 +4,10 @@ import {
 } from "https://deno.land/x/deno_dom@v0.1.36-alpha/deno-dom-wasm.ts";
 
 interface BusInformation {
+  bus_service_status: boolean;
   dow: string;
   fetch_time: string;
-  bus_service_status: BusTimetable[];
+  bus_timetables: BusTimetable[];
 }
 
 interface BusTimetable {
@@ -52,6 +53,13 @@ export const getBusInformation = async (urls: string[]) => {
 
     if (doc === undefined) {
       return;
+    }
+
+    // bus service status
+    if (!(busInformation.bus_service_status) && doc.textContent!.includes("検索できませんでした")) {
+        busInformation.bus_service_status = false;
+    } else {
+        busInformation.bus_service_status = true;
     }
 
     // day of week
@@ -107,6 +115,6 @@ export const getBusInformation = async (urls: string[]) => {
       busTimetables.push(busTimetable);
     }
   }
-  busInformation.bus_service_status = busTimetables;
+  busInformation.bus_timetables = busTimetables;
   return busInformation;
 };
